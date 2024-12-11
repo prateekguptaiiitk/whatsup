@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { UserContext } from "./UserContext"
-import Register from "./Register"
+import RegisterAndLoginForm from "./RegisterAndLoginForm"
 
 export default function Routes() {
     const {username, id} = useContext(UserContext)
@@ -10,6 +10,6 @@ export default function Routes() {
     }
 
     return (
-        <Register />
+        <RegisterAndLoginForm />
     )
 }

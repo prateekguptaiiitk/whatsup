@@ -5,11 +5,11 @@ const jwt = require("jsonwebtoken");
 const User = require("./models/User");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const bycrypt = require('bcryptjs')
+const bycrypt = require("bcryptjs");
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
-const bycryptSalt = bycrypt.genSaltSync(10) 
+const bycryptSalt = bycrypt.genSaltSync(10);
 
 const app = express();
 app.use(bodyParser.json());
@@ -45,11 +45,11 @@ app.get("/profile", (req, res) => {
   }
 });
 
-app.post('/login', async (req, res) => {
-  const {username, password} = req.body
-  const foundUser = await User.findOne({username})
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  const foundUser = await User.findOne({ username });
   if (foundUser) {
-    const passOk = bycrypt.compareSync(password, foundUser.password)
+    const passOk = bycrypt.compareSync(password, foundUser.password);
     if (passOk) {
       jwt.sign(
         { userId: foundUser._id, username },
@@ -61,17 +61,17 @@ app.post('/login', async (req, res) => {
             .cookie("token", token, { sameSite: "none", secure: true })
             .status(201)
             .json({
-              id: createdUser._id,
+              id: foundUser._id,
             });
         }
       );
     }
   }
-})
+});
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
-  const hashedPassword = bycrypt.hashSync(password, bycryptSalt)
+  const hashedPassword = bycrypt.hashSync(password, bycryptSalt);
   const createdUser = await User.create({ username, password: hashedPassword });
   jwt.sign(
     { userId: createdUser._id, username },
